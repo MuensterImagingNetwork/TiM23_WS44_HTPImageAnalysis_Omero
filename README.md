@@ -3,8 +3,9 @@
 ### High throughput data analysis and management with Cellprofiler and OMERO
 
 ###### Workshop provider:
-Thomas Zobel & Sarah Weischer <br>
-Münster Imaging Network,<br> Cells in Motion Interfaculty Centre,<br> University of Münster
+###### Thomas Zobel & Sarah Weischer <br>
+###### Münster Imaging Network, Cells in Motion Interfaculty Centre,
+###### University of Münster, Germany
 
 
 
