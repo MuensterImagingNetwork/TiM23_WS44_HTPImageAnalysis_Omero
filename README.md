@@ -7,7 +7,7 @@ Thomas Zobel & Sarah Weischer <br>
 Münster Imaging Network,<br> Cells in Motion Interfaculty Centre,<br> University of Münster
 
 <br>
-### Abstract
+### Abstract 
 <br>
 The image data management system OMERO allows to organize and store data according to the FAIR principles. To perform image analysis, however, the image data often is downloaded to the local analysis station causing unnecessary duplication of data. Consequently, upload of analysis results, including reporting on analysis metadata (e.g. used analysis pipelines) has to be performed manually.
 
