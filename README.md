@@ -6,16 +6,16 @@ Workshop provider:
 Thomas Zobel & Sarah Weischer <br>
 Münster Imaging Network,<br> Cells in Motion Interfaculty Centre,<br> University of Münster
 
-<br>
-### Abstract 
-<br>
+
+
+### Abstract  
+
 The image data management system OMERO allows to organize and store data according to the FAIR principles. To perform image analysis, however, the image data often is downloaded to the local analysis station causing unnecessary duplication of data. Consequently, upload of analysis results, including reporting on analysis metadata (e.g. used analysis pipelines) has to be performed manually.
 
 <br>
-<br>
+
 ![Graph_Workflow](https://user-images.githubusercontent.com/96130744/223094716-b9b478a3-ae17-467e-9e53-c7540ab5db82.png)
 
-<br>
 <br>
 During this workshop we will present fully integrated data analysis solutions employing OMERO and commonly applied image analysis tools (e.g., CellProfiler, Fiji) using existing python interfaces (OMERO Python language bindings, ezOmero, Cellprofiler Python API). 
 <br>
