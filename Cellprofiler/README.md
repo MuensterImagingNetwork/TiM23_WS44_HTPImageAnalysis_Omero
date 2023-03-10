@@ -7,7 +7,7 @@
 
 ### Example data:
 
-Example data is derived from https://doi.org/10.1038/sdata.2017.18
+Example data is derived from https://doi.org/10.1038/sdata.2017.18 <br>
 https://idr.openmicroscopy.org/webclient/?show=screen-1651
 
 - One image with channel split images for Cellprofiler-GUI use
