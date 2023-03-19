@@ -29,11 +29,15 @@ def well_name_to_position(well_name):
     rows = 'ABCDEFGHIJKLMNOP'
     row = rows.index(well_name[0])
     column = int(well_name[1:]) - 1
+    
     return (row, column)
 
 
 
 def load_pipeline(pipe_dir):
+    """
+    Loads cellprofiler pipeline.
+    """
     pipeline = cellprofiler_core.pipeline.Pipeline()
     pipeline.load(pipe_dir)
 
@@ -41,7 +45,10 @@ def load_pipeline(pipe_dir):
 
 
 def get_save_image_module_indices(pipeline):
-    """ ChatGPT"""
+    """
+    Loops through modules in cellprofiler pipeline and finds 'SaveImages' modules. 
+    Retunrs indices of SaveImage Module as list.
+    """
     save_image_module_indices = []
     for module in pipeline.modules():
         if module.module_name == "SaveImages":
@@ -53,7 +60,13 @@ def get_save_image_module_indices(pipeline):
 
 
 def adjust_pipeline(pipeline, overwrite_results, output_file_format):
-    """ChatGPT"""
+    """
+    Adjusts the cellprofiler pipeline (made using the GUI) to fit into the workflow.
+    Removal of the first 4 modules
+    Settings in export and saving modules. 
+    Returns the adjusted pipeline.
+    """
+
     # Remove first 4 modules: Images, Metadata, NamesAndTypes, Groups...
     # Those will be replaced by InjectImage module
     for i in range(4):
@@ -88,6 +101,9 @@ def adjust_pipeline(pipeline, overwrite_results, output_file_format):
 
 
 def update_save_images_module_setting(pipeline, image_id):
+    """
+    Updates the SaveImage Modules in the pipeline to record the parent image id.
+    """
     for module in pipeline.modules():
         if module.module_name == "SaveImages":
             for setting in module.settings():
@@ -101,6 +117,9 @@ def update_save_images_module_setting(pipeline, image_id):
 
 
 def update_export_module_setting(pipeline, image_id):
+    """
+    Updates the ExportToSpreadsheet module to include the parent image ids.
+    """
     for module in pipeline.modules():
         if module.module_name == "ExportToSpreadsheet":
             for setting in module.settings():
@@ -110,12 +129,16 @@ def update_export_module_setting(pipeline, image_id):
                     new_prefix = f"{image_id}_"
                     setting.set_value(new_prefix)
                     #print(f"Updated ExportToSpreadsheet module setting: {setting.text} = {new_prefix}")
+   
     return pipeline
 
 
 def upload_images_to_omero(saving_path, output_file_format, results_dataset, conn, OMEROWEB):
-    
-
+    """
+    Opens the saved result images from disk and uploads the image to omero to the temporary dataset in omero.
+     A link to the parent image is created and added as description during the upload. 
+    Returns the image id of the new image
+    """
     for img_path in pathlib.Path(saving_path).glob((f"*{output_file_format}")):
         try:
             parent_id, image = load_result_image_from_disk(img_path)
@@ -128,22 +151,11 @@ def upload_images_to_omero(saving_path, output_file_format, results_dataset, con
     return omero_image
 
 
-def retrieve_selected_export_measurements(pipeline):
-
-    for mod in range(len(pipeline.modules())):
-        if pipeline.modules()[mod].module_name == "ExportToSpreadsheet":
-            for set in range(len(pipeline.modules()[mod].settings())):
-                selected_measurements = pipeline.modules()[i].setting(14).get_value()   #Make generic
-
-    return selected_measurements
-
-
-
-
 def load_result_image_from_disk(img_path):
-    """ Loads the image from disk using cv2, prepares the image axes and axis order to zctyx order that is expected by omero.
-    Returns parent_id, and the image."""
-
+    """
+    Loads the image from disk using cv2, prepares the image axes and axis order to zctyx order that is expected by omero.
+    Returns parent_id, and the image.
+    """
     # TO DO: include loading multiple images with different tags
 
     _, tail = os.path.split(img_path)
@@ -160,9 +172,11 @@ def load_result_image_from_disk(img_path):
     return parent_id, image
 
 
-
 def load_multiple_result_images(image_paths):
-
+    """
+    Loads the image from disk using cv2, prepares the image axes and axis order to zctyx order that is expected by omero.
+    Returns parent_ids and the image as lists
+    """
     result_images = []
     for img in image_paths:
         _, tail = os.path.split(img)
@@ -197,29 +211,31 @@ def print_obj(obj, indent=0):
 
 
 def get_parent_well(parent_id):
-    """ Retrieves the well of the parent image.
-    Returns the parent image object, and row and column number."""
-
+    """ 
+    Retrieves the well of the parent image.
+    Returns the parent image object, and row and column number.
+    """
     parent_image = conn.getObject("Image", parent_id)
     for wellsample in parent_image.listParents():
         parent_well = wellsample.getParent(withlinks=False)
-        parent_well_id = parent_well.getId()
         result_row = parent_well.row
         result_column = parent_well.column
 
     return parent_image, result_row, result_column
 
 
-
 def upload_image_from_npseq(image, image_path, conn, dataset, image_link):
-
+    """
+    Uses a image plane generator to upload the result images from numpy seqs
+    using conn.createImageFromNumpySeq().
+    Returns the image id of the created image.
+    """
     def plane_gen():
         """
         Set up a generator of 2D numpy arrays.
         The createImage method below expects planes in the order specified here
         (for z.. for c.. for t..)
         """
-
         for z in range(image.shape[0]):  # all Z sections data.shape[0]
             for c in range(image.shape[1]):  # all channels
                 for t in range(image.shape[2]):  # all time-points
@@ -228,7 +244,6 @@ def upload_image_from_npseq(image, image_path, conn, dataset, image_link):
     image_name = str(image_path).rsplit("\\")[-1]  # New Image name # TO DO: Include correct tag
     omero_image = conn.createImageFromNumpySeq(plane_gen(), image_name, image.shape[0],
                                                    image.shape[1], image.shape[2], description=image_link, dataset=dataset)
-
 
     print("Image uploaded:", omero_image.id, ":", image_name)
 
@@ -240,24 +255,26 @@ def add_images_to_well(conn, images, plate_id, column, row, remove_from=None):
     Add the Images to a Plate, creating a new well at the specified column and
     row
     NB - This will fail if there is already a well at that point
-    https://github.com/ome/omero-scripts/blob/develop/omero/util_scripts/Dataset_To_Plate.py
+    This code is derived from the "Dataset_To_Plate" script. Source: 
+   https://github.com/ome/omero-scripts/blob/develop/omero/util_scripts/Dataset_To_Plate.py
 
     """
     update_service = conn.getUpdateService()
 
-    well = omero.model.WellI()
-    well.plate = omero.model.PlateI(plate_id, False)
-    well.column = rint(column)
+    well = omero.model.WellI()                          # creates well
+    well.plate = omero.model.PlateI(plate_id, False)    # links well to plate
+    well.column = rint(column)                          # sets column and row for well
     well.row = rint(row)
 
     try:
         for image in images:
-            ws = omero.model.WellSampleI()
-            ws.image = omero.model.ImageI(image.id, False)
-            ws.well = well
-            well.addWellSample(ws)
+            ws = omero.model.WellSampleI()              # creates WellSamples that host the images
+            ws.image = omero.model.ImageI(image.id, False) # links the image to the WellSample
+            ws.well = well                              # links the WellSample to the Well
+            well.addWellSample(ws)                      
         update_service.saveObject(well)
     except Exception:
+        
         return False
 
     # remove from Dataset
@@ -266,11 +283,15 @@ def add_images_to_well(conn, images, plate_id, column, row, remove_from=None):
             links = list(image.getParentLinks(remove_from.id))
             link_ids = [l.id for l in links]
             conn.deleteObjects('DatasetImageLink', link_ids)
+   
     return True
 
 
 def add_images_to_plate(omero_images, plate_id, results_plate_id, conn, results_dataset):
-    
+    """
+    This function moves the result images to a new result plate, by finding the well position of the original image. 
+    The result image will be placed on the same position on the new plate. 
+    """
     plate = conn.getObject("Plate", plate_id)
     dict_id_position = {}
     dict_position_id = {}
