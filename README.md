@@ -54,9 +54,8 @@ DOI: 10.1038/sdata.2017.18 https://doi.org/10.1038/sdata.2017.18
 
 ### In this repo you will find:
 
-Upload:
-- JN1, Omero
-- JN2 (from disk, back-up)
-- Environment installation
-- Presentation
-- 
+- JupyterNotebook to perform the analysis
+- Handout of the presentation during the workshop 
+- Installation manual for setting up the conda environment
+- Cellprofiler pipeline we used for the analysis
+- Cellpose plugin for cellprofiler and download link for the cellpose models
