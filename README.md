@@ -7,7 +7,7 @@
 ###### Münster Imaging Network, Cells in Motion Interfaculty Centre,
 ###### University of Münster, Germany
 
-
+[![DOI](https://zenodo.org/badge/610230254.svg)](https://zenodo.org/badge/latestdoi/610230254)
 
 ### Abstract  
 
@@ -60,4 +60,4 @@ DOI: 10.1038/sdata.2017.18 https://doi.org/10.1038/sdata.2017.18
 - Cellprofiler pipeline we used for the analysis
 - Cellpose plugin for cellprofiler and download link for the cellpose models
 
-[![DOI](https://zenodo.org/badge/610230254.svg)](https://zenodo.org/badge/latestdoi/610230254)
+
