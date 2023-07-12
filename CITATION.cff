@@ -1,0 +1,15 @@
+cff-version: 1.1.0
+message: "If you use this code, please cite it as below."
+authors:
+  - family-names: Weischer
+    given-names: Sarah
+    orcid: https://orcid.org/0000-0001-7292-8308
+- family-names: Zobel
+  given-names: Thomas
+  orcid: 
+- family-names: Wendt
+  given-names: Jens
+  orcid:
+title: High throughput & automated data analysis and data management workflow with Cellprofilerand OMERO
+version: v0.1.0
+date-released: 2023-07-12
