@@ -20,4 +20,5 @@ venv/
 *venv/
 .vscode/
 pip-wheel-metadata/
-myconfig.py
+myconfig.pydebug.log 
+myconfig.py 

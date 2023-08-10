@@ -90,9 +90,11 @@ def adjust_pipeline(pipeline, overwrite_results, output_file_format):
         for setting in mod.settings():
             if setting.text == "Overwrite existing files without warning?":
                 setting.set_value(overwrite_results)
-            if output_file_format not None:
+            if output_file_format:
                 if setting.text == "Saved file format":
                     setting.set_value(output_file_format)
+            else:
+                print("No changes in output file format.")
 
     print('Pipeline modules:')
     for module in pipeline.modules():
