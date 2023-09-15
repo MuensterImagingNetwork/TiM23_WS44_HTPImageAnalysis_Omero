@@ -167,10 +167,10 @@ def load_result_image_from_disk(img_path):
     image = cv2.imread(img_path.__str__(), -1)  # TO DO: Adjust to different file formats
 
     # TO DO: include check how many axes are there
-
-    image = np.expand_dims(image, axis=-1)  # adds axes to 2D images
-    image = np.expand_dims(image, axis=-1)
-    image = image.swapaxes(0, 3).swapaxes(1, 4).swapaxes(0, 1).swapaxes(1, 2) # Re-organise array from xyczt to zctyx order expected by OMERO
+    print(image.shape)
+    #image = np.expand_dims(image, axis=-1)  # adds axes to 2D images
+    #image = np.expand_dims(image, axis=-1)
+    #image = image.swapaxes(0, 3).swapaxes(1, 4).swapaxes(0, 1).swapaxes(1, 2) # Re-organise array from xyczt to zctyx order expected by OMERO
 
     return parent_id, image
 

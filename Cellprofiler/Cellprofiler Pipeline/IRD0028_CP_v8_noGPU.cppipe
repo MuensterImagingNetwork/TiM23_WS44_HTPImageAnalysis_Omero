@@ -1,6 +1,6 @@
 CellProfiler Pipeline: http://www.cellprofiler.org
 Version:5
-DateRevision:421
+DateRevision:425
 GitHash:
 ModuleCount:24
 HasImagePlaneDetails:False
@@ -164,9 +164,9 @@ RunCellpose:[module_num:9|svn_version:'Unknown'|variable_revision_number:3|show_
     Stitch Threshold:0.0
     Use 3D:No
     Minimum size:-1
-    Z rescaling factor (anisotropy):1.0
-    Use Omnipose for mask reconstruction:No
-    Invert images:Yes
+    Use Omnipose for mask reconstruction:1.0
+    Invert images:No
+    Remove objects that are touching the edge?:Yes
 
 RunCellpose:[module_num:10|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the input image:Nuclei_Rescaled
@@ -187,11 +187,11 @@ RunCellpose:[module_num:10|svn_version:'Unknown'|variable_revision_number:3|show
     Stitch Threshold:0.0
     Use 3D:No
     Minimum size:-1
-    Z rescaling factor (anisotropy):1.0
-    Use Omnipose for mask reconstruction:No
+    Use Omnipose for mask reconstruction:1.0
     Invert images:No
+    Remove objects that are touching the edge?:No
 
-FilterObjects:[module_num:11|svn_version:'Unknown'|variable_revision_number:9|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
+FilterObjects:[module_num:11|svn_version:'Unknown'|variable_revision_number:10|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the objects to filter:Cytoplasm_Seg
     Name the output objects:Cytoplasm_Seg_Filtered
     Select the filtering mode:Image or mask border
@@ -201,15 +201,18 @@ FilterObjects:[module_num:11|svn_version:'Unknown'|variable_revision_number:9|sh
     Rules or classifier file name:rules.txt
     Class number:1
     Measurement count:1
-    Additional object count:0
+    Additional object count:1
     Assign overlapping child to:Both parents
-    Keep removed objects as a seperate set?:No
+    Keep removed objects as a separate set?:No
     Name the objects removed by the filter:RemovedObjects
     Select the measurement to filter by:AreaShape_Area
     Filter using a minimum measurement value?:Yes
     Minimum value:0.0
     Filter using a maximum measurement value?:Yes
     Maximum value:1.0
+    Select additional object to relabel:Cytoplasm_Seg
+    Name the relabeled objects:FilteredGreen
+    Allow fuzzy feature matching?:No
 
 RelateObjects:[module_num:12|svn_version:'Unknown'|variable_revision_number:5|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Parent objects:Cytoplasm_Seg
@@ -277,6 +280,9 @@ DisplayDataOnImage:[module_num:16|svn_version:'Unknown'|variable_revision_number
     Display background image?:Yes
     Color map scale:Use this image's measurement range
     Color map range:0.0,1.0
+    Font:Arial
+    Use scientific notation?:No
+    Font weight:normal
 
 MeasureObjectSizeShape:[module_num:17|svn_version:'Unknown'|variable_revision_number:3|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select object sets to measure:Cytoplasm_Seg_Filtered, Nuclei_Seg_Relate
@@ -286,13 +292,13 @@ MeasureObjectSizeShape:[module_num:17|svn_version:'Unknown'|variable_revision_nu
 ConvertObjectsToImage:[module_num:18|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the input objects:Cytoplasm_Seg_Filtered
     Name the output image:Cytoplasm_Segmentation
-    Select the color format:Color
+    Select the color format:uint16
     Select the colormap:Default
 
 ConvertObjectsToImage:[module_num:19|svn_version:'Unknown'|variable_revision_number:1|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
     Select the input objects:Nuclei_Seg_Relate
     Name the output image:Nuclei_Segmentation
-    Select the color format:Color
+    Select the color format:uint16
     Select the colormap:Default
 
 SaveImages:[module_num:20|svn_version:'Unknown'|variable_revision_number:16|show_window:False|notes:[]|batch_state:array([], dtype=uint8)|enabled:True|wants_pause:False]
@@ -304,9 +310,9 @@ SaveImages:[module_num:20|svn_version:'Unknown'|variable_revision_number:16|show
     Number of digits:4
     Append a suffix to the image file name?:Yes
     Text to append to the image name:_NucLabel
-    Saved file format:png
+    Saved file format:tiff
     Output file location:Default Output Folder|H:\\Data\\@MiN\\Sarah\\Projects\\TiM2023\\Cellprofiler_Project\\Results\\ImageResults
-    Image bit depth:8-bit integer
+    Image bit depth:16-bit integer
     Overwrite existing files without warning?:Yes
     When to save:Every cycle
     Record the file and path information to the saved image?:No
@@ -324,9 +330,9 @@ SaveImages:[module_num:21|svn_version:'Unknown'|variable_revision_number:16|show
     Number of digits:4
     Append a suffix to the image file name?:Yes
     Text to append to the image name:_CytoLabel
-    Saved file format:png
+    Saved file format:tiff
     Output file location:Default Output Folder|H:\\Data\\@MiN\\Sarah\\Projects\\TiM2023\\Cellprofiler_Project\\Results\\ImageResults
-    Image bit depth:8-bit integer
+    Image bit depth:16-bit integer
     Overwrite existing files without warning?:Yes
     When to save:Every cycle
     Record the file and path information to the saved image?:No
